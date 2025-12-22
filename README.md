@@ -516,6 +516,6 @@ Indexes:
 * JobPositions -> GroupMatrix_Member (One-to-Many)
 
 ## ERD
-![ERD Image](assets\blp.drawio.png)
+![ERD Image](assets/blp.drawio.png)
 
 ## Thank You
