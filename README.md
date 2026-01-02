@@ -51,56 +51,60 @@ Aplikasi ini cocok digunakan untuk:
 
 **Komponen Utama**
 1. Controllers (jobposition.controllers.js)
-Controllers berisi business logic dan handler untuk setiap endpoint. Fungsi utama:
-* create: Membuat job position baru dengan validasi duplikasi title
-* findAll: Mengambil semua job positions dengan relasi lengkap (division, job level, superior, requirements)
-* findByJobId: Mengambil detail job position berdasarkan ID
-* findByJobTitle: Mengambil job position berdasarkan title
-* updateById: Update job position dan career form requirements
-* delete: Soft/hard delete job position
+
+    Controllers berisi business logic dan handler untuk setiap endpoint. Fungsi utama:
+    * create: Membuat job position baru dengan validasi duplikasi title
+    * findAll: Mengambil semua job positions dengan relasi lengkap (division, job level, superior, requirements)
+    * findByJobId: Mengambil detail job position berdasarkan ID
+    * findByJobTitle: Mengambil job position berdasarkan title
+    * updateById: Update job position dan career form requirements
+    * delete: Soft/hard delete job position
 
 2. Migrations
-* create-job-position.js: membuat tabel JobPositions
-* change-jobposition-array.js: mengubah tipe data dari ARRAY ke JSONB pada fields requirements dan descriptions (Alasan: JSONB lebih fleksibel untuk data kompleks dan mendukung indexing)
-* create-jobposition-requirement.js: membuat tabel JobPosition_Requirements
+    * create-job-position.js: membuat tabel JobPositions
+    * change-jobposition-array.js: mengubah tipe data dari ARRAY ke JSONB pada fields requirements dan descriptions (Alasan: JSONB lebih fleksibel untuk data kompleks dan mendukung indexing)
+    * create-jobposition-requirement.js: membuat tabel JobPosition_Requirements
 
 
 3. Models
-JobPosition Model (jobposition.js):
 
-* Mendefinisikan struktur tabel JobPositions
-* Multiple associations (belongsTo dan hasMany)
-* Unique constraint pada field title
-* Fields: title (string), joblevel_id (integer), division_id (integer), superior_id (integer), purpose (string), requirements (JSONB), descriptions (JSONB)
+    JobPosition Model (jobposition.js):
 
-JobPosition_Requirement Model (jobpositionrequirement.js):
+    * Mendefinisikan struktur tabel JobPositions
+    * Multiple associations (belongsTo dan hasMany)
+    * Unique constraint pada field title
+    * Fields: title (string), joblevel_id (integer), division_id (integer), superior_id (integer), purpose (string), requirements (JSONB), descriptions (JSONB)
 
-* Relasi belongsTo ke JobPosition
-* Fields: jobposition_id (integer), education (string), length_service (integer), performance (string)
+    JobPosition_Requirement Model (jobpositionrequirement.js):
+
+    * Relasi belongsTo ke JobPosition
+    * Fields: jobposition_id (integer), education (string), length_service (integer), performance (string)
 
 4. Repositories (jobpositionrequirements.repository.js)
-Repository pattern untuk memisahkan data access logic:
 
-* findOneByJobPositionId: Mencari requirement berdasarkan job position ID
-* create: Membuat requirement baru dengan transaction support
-* updateByJobPositionId: Update requirement berdasarkan job position ID
+    Repository pattern untuk memisahkan data access logic:
 
-Keuntungan Repository Pattern:
+    * findOneByJobPositionId: Mencari requirement berdasarkan job position ID
+    * create: Membuat requirement baru dengan transaction support
+    * updateByJobPositionId: Update requirement berdasarkan job position ID
 
-* Abstraksi query logic dari controller
-* Mudah untuk testing dengan mocking
-* Transaction management yang lebih baik
+    Keuntungan Repository Pattern:
+
+    * Abstraksi query logic dari controller
+    * Mudah untuk testing dengan mocking
+    * Transaction management yang lebih baik
 
 5. Routes (jobposition.routes.js)
-Mendefinisikan endpoint API dengan Express Router:
-```bash
-POST   /           // Create job position
-GET    /           // Get all job positions
-GET    /:id        // Get job position by ID
-PUT    /:id        // Update job position
-DELETE /           // Delete job position
-```
-Note: terdapat duplikasi route `GET /` untuk `findAll` dan `findByJobTitle`. `findByJobTitle` menggunakan endpoint `GET /` untuk `findAll`, namun memproses `req.body`. hal ini berpotensi bug karena menggunakan body pada GET request.
+
+    Mendefinisikan endpoint API dengan Express Router:
+    ```bash
+    POST   /           // Create job position
+    GET    /           // Get all job positions
+    GET    /:id        // Get job position by ID
+    PUT    /:id        // Update job position
+    DELETE /           // Delete job position
+    ```
+    Note: terdapat duplikasi route `GET /` untuk `findAll` dan `findByJobTitle`. `findByJobTitle` menggunakan endpoint `GET /` untuk `findAll`, namun memproses `req.body`. hal ini berpotensi bug karena menggunakan body pada GET request.
 
 **Flow Program**
 
